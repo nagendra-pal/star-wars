@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { Input } from "reactstrap";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import {
-  ErrorMessage,
-  Field,
-  Formik,
-  Form,
-  FormikProps,
-} from "formik";
+import { ErrorMessage, Field, Formik, Form, FormikProps } from "formik";
 import {
   LoginBody,
   Container,
@@ -22,7 +16,10 @@ import {
 import { InitialValuesMapper } from "./form/Mapper";
 import { Validation } from "./form/Validation";
 import { LoginType } from "./LoginTypes";
-import { errorCaption, invalidCredentialsErrorCaption } from "../../config/constants";
+import {
+  errorCaption,
+  invalidCredentialsErrorCaption,
+} from "../../config/constants";
 
 export const InputComponent = ({ field, ...props }) => (
   <FieldContainer>
@@ -47,10 +44,7 @@ const Login = (): JSX.Element => {
         <Formik
           initialValues={InitialValuesMapper()}
           validationSchema={Validation}
-          onSubmit={(
-            values: LoginType,
-            actions: any,
-          ): void => {
+          onSubmit={(values: LoginType, actions: any): void => {
             actions.setSubmitting(true);
             const searchURL = `https://swapi.dev/api/people/?search=${values.username}`;
             axios
@@ -61,12 +55,16 @@ const Login = (): JSX.Element => {
                   res.data.results &&
                   res.data.results.length
                 ) {
-                  localStorage.setItem(
-                    "user",
-                    JSON.stringify(res.data.results[0])
-                  );
+                  const user = res.data.results[0];
+                  if (user.birth_year === values.password) {
+                    // Ideally we are saving JWT token but here we are using user info
+                    localStorage.setItem("user", JSON.stringify(user));
 
-                  routerHistory.push("/search");
+                    routerHistory.push("/search");
+                  } else {
+                    actions.setSubmitting(false);
+                    setError(invalidCredentialsErrorCaption);
+                  }
                 } else {
                   actions.setSubmitting(false);
                   setError(invalidCredentialsErrorCaption);
