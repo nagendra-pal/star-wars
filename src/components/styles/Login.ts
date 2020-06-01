@@ -20,7 +20,7 @@ export const Container = styled.div`
   vertical-align: top;
   width: 80%;
   @media only screen and (min-width: 768px) {
-    width: 40%;
+    width: 42%;
   }
 `;
 

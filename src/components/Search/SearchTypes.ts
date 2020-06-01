@@ -9,6 +9,8 @@ export interface SearchStateType {
     message: string;
     count: number;
     user: string;
+    isTimerStart: boolean;
+    time: number;
 };
 
 export interface PlanetType {
